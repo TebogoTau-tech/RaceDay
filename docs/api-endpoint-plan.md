@@ -1,0 +1,27 @@
+# RaceDay API Endpoint Plan
+
+This document outlines the RESTful API endpoints for the **RaceDay** Event Management System.
+
+---
+
+## Endpoint Specifications
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **POST** | `/api/auth/register` | Registers a new user (Organiser or Participant) in the system. | None (Public) | `{ "fullName": "string", "email": "string", "password": "string", "phoneNumber": "string", "roleId": 2 }` | **201 Created** - User object with JWT token.<br>**400 Bad Request** - Invalid data or email already exists. |
+| **POST** | `/api/auth/login` | Authenticates a user and returns a JWT token containing their role claim. | None (Public) | `{ "email": "string", "password": "string" }` | **200 OK** - Returns JWT token and user info.<br>**401 Unauthorized** - Invalid credentials. |
+| **GET** | `/api/profile` | Retrieves the profile details of the currently logged-in user. | Any (Logged in) | None | **200 OK** - Returns user profile data.<br>**401 Unauthorized** - Missing or invalid token. |
+| **PUT** | `/api/profile` | Updates profile details for the currently logged-in user. | Any (Logged in) | `{ "fullName": "string", "phoneNumber": "string" }` | **200 OK** - Updated user profile.<br>**400 Bad Request** - Invalid payload. |
+| **GET** | `/api/events` | Fetches a list of all upcoming events. | None (Public) | None | **200 OK** - Array of event summary objects. |
+| **GET** | `/api/events/{id}` | Fetches detailed information for a specific event, including categories. | None (Public) | None | **200 OK** - Event object with categories.<br>**404 Not Found** - Event ID does not exist. |
+| **POST** | `/api/events` | Creates a new road event in the system. | Organiser | `{ "title": "string", "description": "string", "location": "string", "eventDate": "2026-11-01T06:00:00" }` | **201 Created** - Created event object.<br>**403 Forbidden** - Non-organiser role.<br>**400 Bad Request** - Invalid input. |
+| **PUT** | `/api/events/{id}` | Updates details of an existing event managed by the organiser. | Organiser | `{ "title": "string", "description": "string", "location": "string", "eventDate": "2026-11-01T06:00:00" }` | **200 OK** - Updated event object.<br>**403 Forbidden** - Not event owner.<br>**404 Not Found** - Event ID invalid. |
+| **DELETE** | `/api/events/{id}` | Deletes an event and its associated categories/enrolments. | Organiser | None | **204 No Content** - Successfully deleted.<br>**403 Forbidden** - Unauthorized user. |
+| **POST** | `/api/events/{eventId}/categories` | Adds a race category (e.g., 42km, 21km) to a specific event. | Organiser | `{ "categoryName": "string", "distanceKM": 21.1, "entryFee": 250.00 }` | **201 Created** - Created category object.<br>**404 Not Found** - Event does not exist. |
+| **GET** | `/api/events/{eventId}/categories` | Retrieves all distance categories associated with an event. | None (Public) | None | **200 OK** - List of categories for event. |
+| **POST** | `/api/enrolments` | Enrols the logged-in participant into an event category. | Participant | `{ "categoryId": 1 }` | **201 Created** - Enrolment details.<br>**409 Conflict** - Already enrolled in category. |
+| **GET** | `/api/enrolments/my-enrolments` | Retrieves all active event enrolments for the logged-in participant. | Participant | None | **200 OK** - List of participant enrolments. |
+| **GET** | `/api/events/{eventId}/enrolments` | Retrieves a list of all participant enrolments for an event. | Organiser | None | **200 OK** - List of participant enrolments for event.<br>**403 Forbidden** - Non-organiser access. |
+| **POST** | `/api/results` | Captures participant race timing and positioning results for an event. | Organiser | `{ "enrolmentId": 1, "finishTime": "03:22:15", "overallPosition": 45, "categoryPosition": 12 }` | **201 Created** - Created result object.<br>**400 Bad Request** - Invalid enrolment ID. |
+| **GET** | `/api/results/my-results` | Fetches historical race results for the logged-in participant. | Participant | None | **200 OK** - Array of user race results. |
+| **GET** | `/api/events/{eventId}/results` | Fetches overall leaderboard and official results for a completed event. | None (Public) | None | **200 OK** - Array of event results sorted by position. |

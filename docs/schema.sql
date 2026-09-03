@@ -1,27 +1,118 @@
-# RaceDay API Endpoint Plan
+-- ============================================================
+-- RaceDay Database Creation & Schema Script
+-- Module: PROG6212 - Portfolio of Evidence (Part 1)
+-- Target RDBMS: Microsoft SQL Server (SSMS)
+-- ============================================================
 
-This document outlines the RESTful API endpoints for the **RaceDay** Event Management System.
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'RaceDayDB')
+BEGIN
+    CREATE DATABASE RaceDayDB;
+END
+GO
 
----
+USE RaceDayDB;
+GO
 
-## Endpoint Specifications
+IF OBJECT_ID('dbo.Results', 'U') IS NOT NULL DROP TABLE dbo.Results;
+IF OBJECT_ID('dbo.Enrolments', 'U') IS NOT NULL DROP TABLE dbo.Enrolments;
+IF OBJECT_ID('dbo.EventCategories', 'U') IS NOT NULL DROP TABLE dbo.EventCategories;
+IF OBJECT_ID('dbo.Events', 'U') IS NOT NULL DROP TABLE dbo.Events;
+IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
+IF OBJECT_ID('dbo.Roles', 'U') IS NOT NULL DROP TABLE dbo.Roles;
+GO
 
-| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **POST** | `/api/auth/register` | Registers a new user (Organiser or Participant) in the system. | None (Public) | `{ "fullName": "string", "email": "string", "password": "string", "phoneNumber": "string", "roleId": 2 }` | **201 Created** - User object with JWT token.<br>**400 Bad Request** - Invalid data or email already exists. |
-| **POST** | `/api/auth/login` | Authenticates a user and returns a JWT token containing their role claim. | None (Public) | `{ "email": "string", "password": "string" }` | **200 OK** - Returns JWT token and user info.<br>**401 Unauthorized** - Invalid credentials. |
-| **GET** | `/api/profile` | Retrieves the profile details of the currently logged-in user. | Any (Logged in) | None | **200 OK** - Returns user profile data.<br>**401 Unauthorized** - Missing or invalid token. |
-| **PUT** | `/api/profile` | Updates profile details for the currently logged-in user. | Any (Logged in) | `{ "fullName": "string", "phoneNumber": "string" }` | **200 OK** - Updated user profile.<br>**400 Bad Request** - Invalid payload. |
-| **GET** | `/api/events` | Fetches a list of all upcoming events. | None (Public) | None | **200 OK** - Array of event summary objects. |
-| **GET** | `/api/events/{id}` | Fetches detailed information for a specific event, including categories. | None (Public) | None | **200 OK** - Event object with categories.<br>**404 Not Found** - Event ID does not exist. |
-| **POST** | `/api/events` | Creates a new road event in the system. | Organiser | `{ "title": "string", "description": "string", "location": "string", "eventDate": "2026-11-01T06:00:00" }` | **201 Created** - Created event object.<br>**403 Forbidden** - Non-organiser role.<br>**400 Bad Request** - Invalid input. |
-| **PUT** | `/api/events/{id}` | Updates details of an existing event managed by the organiser. | Organiser | `{ "title": "string", "description": "string", "location": "string", "eventDate": "2026-11-01T06:00:00" }` | **200 OK** - Updated event object.<br>**403 Forbidden** - Not event owner.<br>**404 Not Found** - Event ID invalid. |
-| **DELETE** | `/api/events/{id}` | Deletes an event and its associated categories/enrolments. | Organiser | None | **204 No Content** - Successfully deleted.<br>**403 Forbidden** - Unauthorized user. |
-| **POST** | `/api/events/{eventId}/categories` | Adds a race category (e.g., 42km, 21km) to a specific event. | Organiser | `{ "categoryName": "string", "distanceKM": 21.1, "entryFee": 250.00 }` | **201 Created** - Created category object.<br>**404 Not Found** - Event does not exist. |
-| **GET** | `/api/events/{eventId}/categories` | Retrieves all distance categories associated with an event. | None (Public) | None | **200 OK** - List of categories for event. |
-| **POST** | `/api/enrolments` | Enrols the logged-in participant into an event category. | Participant | `{ "categoryId": 1 }` | **201 Created** - Enrolment details.<br>**409 Conflict** - Already enrolled in category. |
-| **GET** | `/api/enrolments/my-enrolments` | Retrieves all active event enrolments for the logged-in participant. | Participant | None | **200 OK** - List of participant enrolments. |
-| **GET** | `/api/events/{eventId}/enrolments` | Retrieves a list of all participant enrolments for an event. | Organiser | None | **200 OK** - List of participant enrolments for event.<br>**403 Forbidden** - Non-organiser access. |
-| **POST** | `/api/results` | Captures participant race timing and positioning results for an event. | Organiser | `{ "enrolmentId": 1, "finishTime": "03:22:15", "overallPosition": 45, "categoryPosition": 12 }` | **201 Created** - Created result object.<br>**400 Bad Request** - Invalid enrolment ID. |
-| **GET** | `/api/results/my-results` | Fetches historical race results for the logged-in participant. | Participant | None | **200 OK** - Array of user race results. |
-| **GET** | `/api/events/{eventId}/results` | Fetches overall leaderboard and official results for a completed event. | None (Public) | None | **200 OK** - Array of event results sorted by position. |
+-- CREATE TABLES
+CREATE TABLE dbo.Roles (
+    RoleId INT IDENTITY(1,1) PRIMARY KEY,
+    RoleName VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE dbo.Users (
+    UserId INT IDENTITY(1,1) PRIMARY KEY,
+    RoleId INT NOT NULL,
+    FullName VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(20) NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES dbo.Roles(RoleId)
+);
+
+CREATE TABLE dbo.Events (
+    EventId INT IDENTITY(1,1) PRIMARY KEY,
+    OrganiserId INT NOT NULL,
+    Title VARCHAR(150) NOT NULL,
+    Description TEXT NULL,
+    Location VARCHAR(150) NOT NULL,
+    EventDate DATETIME NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Events_Users FOREIGN KEY (OrganiserId) REFERENCES dbo.Users(UserId)
+);
+
+CREATE TABLE dbo.EventCategories (
+    CategoryId INT IDENTITY(1,1) PRIMARY KEY,
+    EventId INT NOT NULL,
+    CategoryName VARCHAR(100) NOT NULL,
+    DistanceKM DECIMAL(5,2) NOT NULL,
+    EntryFee DECIMAL(10,2) NOT NULL,
+    CONSTRAINT FK_EventCategories_Events FOREIGN KEY (EventId) REFERENCES dbo.Events(EventId) ON DELETE CASCADE
+);
+
+CREATE TABLE dbo.Enrolments (
+    EnrolmentId INT IDENTITY(1,1) PRIMARY KEY,
+    ParticipantId INT NOT NULL,
+    CategoryId INT NOT NULL,
+    EnrolmentDate DATETIME DEFAULT GETDATE(),
+    PaymentStatus VARCHAR(20) DEFAULT 'Pending' CHECK (PaymentStatus IN ('Pending', 'Paid', 'Cancelled')),
+    CONSTRAINT FK_Enrolments_Users FOREIGN KEY (ParticipantId) REFERENCES dbo.Users(UserId),
+    CONSTRAINT FK_Enrolments_EventCategories FOREIGN KEY (CategoryId) REFERENCES dbo.EventCategories(CategoryId),
+    CONSTRAINT UQ_Participant_Category UNIQUE (ParticipantId, CategoryId)
+);
+
+CREATE TABLE dbo.Results (
+    ResultId INT IDENTITY(1,1) PRIMARY KEY,
+    EnrolmentId INT NOT NULL UNIQUE,
+    FinishTime TIME NULL,
+    OverallPosition INT NULL,
+    CategoryPosition INT NULL,
+    CONSTRAINT FK_Results_Enrolments FOREIGN KEY (EnrolmentId) REFERENCES dbo.Enrolments(EnrolmentId) ON DELETE CASCADE
+);
+GO
+
+-- SEED SAMPLE DATA
+INSERT INTO dbo.Roles (RoleName) 
+VALUES ('Organiser'), ('Participant');
+
+INSERT INTO dbo.Users (RoleId, FullName, Email, PasswordHash, PhoneNumber)
+VALUES 
+(1, 'Sipho Zulu', 'sipho@eventmasters.co.za', 'hashed_pass_1', '+27821234567'),
+(1, 'Anika van der Merwe', 'anika@raceorganisers.co.za', 'hashed_pass_2', '+27839876543'),
+(2, 'Thabo Mokoena', 'thabo.mokoena@gmail.com', 'hashed_pass_3', '+27711122334'),
+(2, 'Sarah Jenkins', 'sarah.j@yahoo.com', 'hashed_pass_4', '+27725556677');
+
+INSERT INTO dbo.Events (OrganiserId, Title, Description, Location, EventDate)
+VALUES 
+(1, 'Soweto Marathon 2026', 'The People’s Race through historic Soweto.', 'Soweto, Johannesburg', '2026-11-01 06:00:00'),
+(1, 'Cape Town Cycle Tour 2026', 'World famous scenic cycle race around the Cape Peninsula.', 'Cape Town', '2026-10-15 06:30:00'),
+(2, 'Durban City Beach Walk', 'A community walk along the Durban beachfront promenade.', 'Durban Beachfront', '2026-12-05 08:00:00');
+
+INSERT INTO dbo.EventCategories (EventId, CategoryName, DistanceKM, EntryFee)
+VALUES 
+(1, '42.2km Full Marathon', 42.20, 350.00),
+(1, '21.1km Half Marathon', 21.10, 250.00),
+(1, '10km Open Run', 10.00, 150.00),
+(2, '109km Main Cycle Race', 109.00, 550.00),
+(3, '5km Family Walk', 5.00, 80.00);
+
+INSERT INTO dbo.Enrolments (ParticipantId, CategoryId, PaymentStatus)
+VALUES 
+(3, 1, 'Paid'),
+(3, 4, 'Paid'),
+(4, 2, 'Paid'),
+(4, 5, 'Pending');
+
+INSERT INTO dbo.Results (EnrolmentId, FinishTime, OverallPosition, CategoryPosition)
+VALUES 
+(1, '03:22:15', 45, 12),
+(3, '01:55:40', 112, 34);
+GO
