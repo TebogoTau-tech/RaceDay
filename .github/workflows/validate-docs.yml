@@ -1,0 +1,41 @@
+name: Validate Documentation & Repository Structure
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify /docs directory exists
+        run: |
+          if [ ! -d "docs" ]; then
+            echo "Error: /docs directory is missing!"
+            exit 1
+          fi
+
+      - name: Verify required Part 1 documentation files exist
+        run: |
+          REQUIRED_FILES=("docs/schema.sql" "docs/api-endpoint-plan.md")
+          MISSING_FILES=0
+
+          for FILE in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$FILE" ]; then
+              echo "Missing file: $FILE"
+              MISSING_FILES=$((MISSING_FILES+1))
+            else
+              echo "Found file: $FILE"
+            fi
+          done
+
+          if [ $MISSING_FILES -gt 0 ]; then
+            echo "Validation failed: Some required files are missing in /docs."
+            exit 1
+          fi
