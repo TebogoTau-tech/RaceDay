@@ -118,3 +118,4 @@ VALUES
 GO-- Database Schema Script for RaceDay System
 -- Core User and Authentication Tables
 -- Indexing strategies for FK performance
+-- End of schema definition script
