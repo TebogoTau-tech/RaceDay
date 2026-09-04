@@ -24,3 +24,6 @@
 
 ### Authentication Protocol
 All secured endpoints require a  HTTP Header.
+
+### Status Codes
+Standard response codes: 200 (OK), 201 (Created), 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found).
