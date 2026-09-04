@@ -42,3 +42,6 @@ The GitHub Actions workflow automatically validates that all required documentat
 ## Tech Stack
 - **Backend Framework:** .NET Core C# API
 - **Database:** Microsoft SQL Server (SSMS)
+
+## Local Setup
+1. Execute  in SSMS to instantiate database and seed data.
