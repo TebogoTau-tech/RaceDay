@@ -15,7 +15,4 @@ jobs:
 
       - name: Check Required Files Exist
         run: |
-          echo "Checking required documentation files..."
-          test -f docs/schema.sql || (echo "Missing docs/schema.sql" && exit 1)
-          test -f docs/api-endpoint-plan.md || (echo "Missing docs/api-endpoint-plan.md" && exit 1)
-          echo "All required documentation files are present!"
+          test -f docs/schema.sql && test -f docs/api-endpoint-plan.md
