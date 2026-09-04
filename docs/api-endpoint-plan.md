@@ -21,3 +21,6 @@
 | **GET** | `/api/results/my-results` | Fetches historical race results for the logged-in participant. | Participant | None | **200 OK** - Array of user race results. |
 | **GET** | `/api/events/{eventId}/results` | Fetches overall leaderboard and official results for a completed event. | None (public) | None | **200 OK** - Array of event results sorted by position. |
 ## API Version: v1.0.0
+
+### Authentication Protocol
+All secured endpoints require a  HTTP Header.
