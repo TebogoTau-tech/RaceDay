@@ -117,3 +117,4 @@ VALUES
 (3, '01:55:40', 112, 34);
 GO-- Database Schema Script for RaceDay System
 -- Core User and Authentication Tables
+-- Indexing strategies for FK performance
