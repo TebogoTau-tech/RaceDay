@@ -20,3 +20,4 @@
 | **POST** | `/api/results` | Captures participant race timing and positioning results for an event. | Organiser | `{ "enrolmentId": 1, "finishTime": "03:22:15", "overallPosition": 45, "categoryPosition": 12 }` | **201 Created** - Created result object.<br>**400 Bad Request** - Invalid enrolment ID. |
 | **GET** | `/api/results/my-results` | Fetches historical race results for the logged-in participant. | Participant | None | **200 OK** - Array of user race results. |
 | **GET** | `/api/events/{eventId}/results` | Fetches overall leaderboard and official results for a completed event. | None (public) | None | **200 OK** - Array of event results sorted by position. |
+## API Version: v1.0.0
