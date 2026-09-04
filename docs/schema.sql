@@ -116,3 +116,4 @@ VALUES
 (1, '03:22:15', 45, 12),
 (3, '01:55:40', 112, 34);
 GO-- Database Schema Script for RaceDay System
+-- Core User and Authentication Tables
