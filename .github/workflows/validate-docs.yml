@@ -38,4 +38,4 @@ jobs:
           if [ $MISSING_FILES -gt 0 ]; then
             echo "Validation failed: Some required files are missing in /docs."
             exit 1
-          fi
+          fi# Automated GitHub Actions validator workflow
