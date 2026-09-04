@@ -45,3 +45,6 @@ The GitHub Actions workflow automatically validates that all required documentat
 
 ## Local Setup
 1. Execute  in SSMS to instantiate database and seed data.
+
+## Commit & Workflow Strategy
+All feature commits follow conventional commit naming guidelines.
