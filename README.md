@@ -38,7 +38,8 @@ The GitHub Actions workflow automatically validates that all required documentat
 
 ## Video Presentation
 
-- **YouTube Link:** [YouTube video URL]
+- **YouTube Link:** [FIRST YOUTUBE VIDEO: https://youtu.be/aTfshBzY6kk ]
+- 
 ## Tech Stack
 - **Backend Framework:** .NET Core C# API
 - **Database:** Microsoft SQL Server (SSMS)
