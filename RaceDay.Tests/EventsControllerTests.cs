@@ -41,5 +41,27 @@ namespace RaceDay.Tests
             Assert.Single(categoryList);
             Assert.Equal("Trail Run", categoryList[0].Name);
         }
+
+        [Fact]
+        public async Task CreateEvent_ReturnsBadRequest_WhenOrganiserNotFound()
+        {
+            // Arrange
+            var context = GetInMemoryDbContext();
+            var controller = new EventsController(context);
+
+            var dto = new EventsController.CreateEventDto
+            {
+                Title = "Test Marathon",
+                OrganiserId = 999 // Non-existent organiser
+            };
+
+            // Act
+            var result = await controller.CreateEvent(dto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequestResult.Value);
+        }
+
     }
 }
