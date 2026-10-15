@@ -38,19 +38,24 @@ namespace RaceDay.Api.Data
                 .HasForeignKey(e => e.OrganiserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure Enrolment -> Participant relationship
+            // Configure Enrolment relationships to avoid multiple cascade paths in SQL Server
             modelBuilder.Entity<Enrolment>()
                 .HasOne(en => en.Participant)
                 .WithMany(p => p.Enrolments)
                 .HasForeignKey(en => en.ParticipantId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure Enrolment -> Result (1-to-1 relationship)
             modelBuilder.Entity<Enrolment>()
-                .HasOne(en => en.Result)
-                .WithOne(r => r.Enrolment)
-                .HasForeignKey<Result>(r => r.EnrolmentId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(en => en.Event)
+                .WithMany(e => e.Enrolments)
+                .HasForeignKey(en => en.EventId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Enrolment>()
+                .HasOne(en => en.Category)
+                .WithMany(c => c.Enrolments)
+                .HasForeignKey(en => en.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
