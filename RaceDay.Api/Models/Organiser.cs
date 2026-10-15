@@ -6,3 +6,5 @@ namespace RaceDay.Api.Models
     {
         // Navigation property for events created by this organiser
         public ICollection<Event> OrganizedEvents { get; set; } = new List<Event>();
+    }
+}
