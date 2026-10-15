@@ -1,54 +1,45 @@
 # RaceDay
-RaceDay - Full-Stack Web Event Management System (PROG6212 PoE Part 1)
+RaceDay - Full-Stack Web Event Management System (PROG6212 PoE Part 2)
 
-RaceDay is a web-based event management application tailored for South African road running, walking and cycling event (such as the Soweto Marathon and Cape Town Tour).
- 
----
+# RaceDay RESTful API (.NET 8.0)
 
-## System Access & Roles 
-
-The system is configured around two primary user roles:
-
-1. **Organiser:**
-   - Create, update, and manage road events and distance categories.
-   - Capture and publish official race finish times and positions.
-   - View participant enrolments across event categories.
-
-2. **Participant:**
-   - Register account profile details and manage personal info.
-   - Browse upcoming road events and distance categories.
-   - Enrol into race categories and view personal race history.
+A robust, secure, and modular RESTful API built for managing running events, categories, user accounts, and participant enrolments. Developed as part of an advanced software engineering and database systems module.
 
 ---
 
-## Repository Documentation Structure
+##  Tech Stack & Architecture
 
-- `/docs/erd-diagram.png` - Entity Relationship Diagram representing all 6 system entities.
-- `/docs/api-endpoint-plan.md` - Complete RESTful API endpoint specifications.
-- `/docs/schema.sql` - T-SQL schema setup script and sample seed data for SSMS.
-- `/.github/workflows/validate-docs.yml` - CI/CD pipeline verifying documentation file existence.
-
----
-
-## CI/CD Pipeline
-
-The GitHub Actions workflow automatically validates that all required documentation files exist in the `/docs` directory on every push to `main`.
+* **Framework:** .NET 8.0 (C#)
+* **Data Access:** Entity Framework Core (EF Core) with SQL Server
+* **Design Patterns & Modeling:** 
+  * Table-per-Hierarchy (TPH) inheritance model for `User` (`Organiser` vs. `Participant`)
+  * REST architectural principles with Controller/DTO separation
+* **Security & Auth:** Password hashing via BCrypt and JWT/Token-ready controller architecture
+* **Testing:** xUnit, Moq, and EF Core In-Memory Database for high-coverage unit tests
 
 ---
 
-## Video Presentation
+##  Database Schema & TPH Design
+The system employs **Table-per-Hierarchy (TPH)** inheritance mapping for users, allowing both `Organiser` and `Participant` entities to share a single `Users` table distinguished by a discriminator column. 
+* **Events:** Linked to organizers and categories.
+* **Enrolments:** Enforces strict validation constraints (e.g., preventing duplicate event registrations).
 
-- **YouTube Link:** [FIRST YOUTUBE VIDEO: https://youtu.be/aTfshBzY6kk ]
-- **YouTube Link:** [SECOND YOUTUBE VIDEO: https://youtu.be/HcaszcZjUeY ]
-## Tech Stack
-- **Backend Framework:** .NET Core C# API
-- **Database:** Microsoft SQL Server (SSMS)
+---
 
-## Local Setup
-1. Execute  in SSMS to instantiate database and seed data.
+## Getting Started & Setup
+
+### Prerequisites
+* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) installed on your machine.
+* SQL Server or LocalDB.
+
+### Installation & Database Migration
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd RaceDay
 
 ## Commit & Workflow Strategy
 All feature commits follow conventional commit naming guidelines.
 
 ---
-Submission Date: September 2026
+YouTube Link : [link]
