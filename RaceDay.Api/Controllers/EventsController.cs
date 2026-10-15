@@ -139,5 +139,40 @@ namespace RaceDay.Api.Controllers
 
             return Ok(new { message = "Successfully enrolled in event!", enrolmentId = enrolment.EnrolmentId });
         }
+
+
+
+        // GET: api/Events/enrolments/{participantId}
+        [HttpGet("enrolments/{participantId}")]
+        public async Task<IActionResult> GetParticipantEnrolments(int participantId)
+        {
+            // Check if participant exists
+            var participantExists = await _context.Users.OfType<Participant>()
+                .AnyAsync(p => p.UserId == participantId);
+
+            if (!participantExists)
+            {
+                return NotFound(new { message = "Participant not found." });
+            }
+
+            var enrolments = await _context.Enrolments
+                .Where(e => e.ParticipantId == participantId)
+                .Include(e => e.Event)
+                .Include(e => e.Category)
+                .Select(e => new
+                {
+                    e.EnrolmentId,
+                    e.EnrolmentDate,
+                    EventTitle = e.Event.Title,
+                    EventDate = e.Event.EventDate,
+                    Location = e.Event.Location,
+                    CategoryName = e.Category.Name
+                })
+                .ToListAsync();
+
+            return Ok(enrolments);
+
+        }
     }
 }
+    
