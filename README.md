@@ -35,7 +35,7 @@ The system employs **Table-per-Hierarchy (TPH)** inheritance mapping for users, 
 ### Installation & Database Migration
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone (https://github.com/TebogoTau-tech/RaceDay.git)
    cd RaceDay
 
 ## Commit & Workflow Strategy
