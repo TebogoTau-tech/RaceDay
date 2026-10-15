@@ -59,6 +59,54 @@ namespace RaceDay.Tests
             var result = await controller.CreateEvent(dto);
 
             // Assert
+            var badRequestResult =  Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task EnrolParticipant_ReturnsBadRequest_WhenAlreadyEnrolled()
+        {
+            // Arrange
+            var context = GetInMemoryDbContext();
+
+            // Seed test data matching your actual model properties
+            var participant = new Participant { UserId = 1, Name = "John Doe", Email = "john@example.com", PasswordHash = "hash" };
+            var category = new Category { CategoryId = 1, Name = "Marathon", Description = "Full marathon" };
+            var organiser = new Organiser { UserId = 2, Name = "Org", Email = "org@example.com", PasswordHash = "hash" };
+
+            var raceEvent = new Event
+            {
+                EventId = 1,
+                Title = "Spring Run",
+                Description = "Fun run",
+                EventDate = DateTime.UtcNow.AddDays(5),
+                Location = "Park",
+                CategoryId = 1,
+                OrganiserId = 2
+            };
+
+            context.Users.Add(participant);
+            context.Users.Add(organiser);
+            context.Categories.Add(category);
+            context.Events.Add(raceEvent);
+
+            // Add an initial enrolment
+            context.Enrolments.Add(new Enrolment { EnrolmentId = 1, ParticipantId = 1, EventId = 1, CategoryId = 1, EnrolmentDate = DateTime.UtcNow });
+            await context.SaveChangesAsync();
+
+            var controller = new EventsController(context);
+
+            var dto = new EventsController.EnrolmentDto
+            {
+                ParticipantId = 1,
+                EventId = 1,
+                CategoryId = 1
+            };
+
+            // Act
+            var result = await controller.EnrolParticipant(dto);
+
+            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.NotNull(badRequestResult.Value);
         }
