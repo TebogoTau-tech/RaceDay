@@ -1,3 +1,4 @@
+![Build and Test](https://github.com/TebogoTau-tech/RaceDay/actions/workflows/dotnet.yml/badge.svg)
 # RaceDay RESTful API (.NET 8.0)
 
 A secure and modular RESTful API built with .NET 8.0 and Entity Framework Core (Code-First) for managing running events, categories, user accounts, and participant enrolments.
