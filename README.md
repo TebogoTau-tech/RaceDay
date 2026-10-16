@@ -8,7 +8,7 @@ A secure and modular RESTful API built with .NET 8.0 and Entity Framework Core (
 Student Name: Tebogo Tau
 Student Number: ST10473321
 Module Code: PROG6212
-* **Video Link:** [Insert YouTube Demo Video Link Here]
+* **Video Link:** https://youtu.be/FP9MSLGpp1c
 
 ---
 
