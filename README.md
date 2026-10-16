@@ -1,45 +1,36 @@
-# RaceDay
-RaceDay - Full-Stack Web Event Management System (PROG6212 PoE Part 2)
-
 # RaceDay RESTful API (.NET 8.0)
 
-A robust, secure, and modular RESTful API built for managing running events, categories, user accounts, and participant enrolments. Developed as part of an advanced software engineering and database systems module.
+A secure and modular RESTful API built with .NET 8.0 and Entity Framework Core (Code-First) for managing running events, categories, user accounts, and participant enrolments.
 
 ---
 
-##  Tech Stack & Architecture
 
-* **Framework:** .NET 8.0 (C#)
-* **Data Access:** Entity Framework Core (EF Core) with SQL Server
-* **Design Patterns & Modeling:** 
-  * Table-per-Hierarchy (TPH) inheritance model for `User` (`Organiser` vs. `Participant`)
-  * REST architectural principles with Controller/DTO separation
-* **Security & Auth:** Password hashing via BCrypt and JWT/Token-ready controller architecture
-* **Testing:** xUnit, Moq, and EF Core In-Memory Database for high-coverage unit tests
+Student Name: Tebogo Tau
+Student Number: ST10473321
+Module Code: PROG6212
+* **Video Link:** [Insert YouTube Demo Video Link Here]
 
 ---
 
-##  Database Schema & TPH Design
-The system employs **Table-per-Hierarchy (TPH)** inheritance mapping for users, allowing both `Organiser` and `Participant` entities to share a single `Users` table distinguished by a discriminator column. 
-* **Events:** Linked to organizers and categories.
-* **Enrolments:** Enforces strict validation constraints (e.g., preventing duplicate event registrations).
+## Tech Stack & Architecture
+Framework: .NET 8.0 (C#)
+Database & ORM: SQL Server via Entity Framework Core (EF Core) Code-First
+Design Pattern: Table-per-Hierarchy (TPH) inheritance model for the `User` base class, differentiating `Organiser` and `Participant` entities in a single table.
+Testing: xUnit, Moq, and EF Core In-Memory Database for unit testing.
+Security: Password hashing using BCrypt.
 
 ---
 
-## Getting Started & Setup
+Step-by-Step Testing Guide 
 
-### Prerequisites
-* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) installed on your machine.
-* SQL Server or LocalDB.
+Follow these steps to run and test the application locally:
 
-### Installation & Database Migration
-1. Clone the repository:
+1. Prerequisites
+Ensure you have the following installed on your machine:
+* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* Visual Studio 2022 (or Visual Studio Code) with SQL Server / LocalDB.
+
+2. Clone and Open the Project
+   1. Clone the repository to your local machine:
    ```bash
-   git clone (https://github.com/TebogoTau-tech/RaceDay.git)
-   cd RaceDay
-
-## Commit & Workflow Strategy
-All feature commits follow conventional commit naming guidelines.
-
----
-YouTube Link : [link]
+   git clone: https://github.com/TebogoTau-tech/RaceDay.git
