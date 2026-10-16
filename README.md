@@ -64,6 +64,8 @@ Click Run All to execute all unit tests verifying controller logic, registration
 (Alternatively, run dotnet test from your terminal).
 
 
+Core API Endpoints Reference
+
 
 POST/api/Auth/register-participant -- Registers a new participant account with a securely hashed password.
 
