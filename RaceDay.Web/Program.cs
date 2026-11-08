@@ -1,3 +1,5 @@
+using RaceDay.Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +11,8 @@ builder.Services.AddHttpClient("RaceDayApi", client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]
         ?? throw new InvalidOperationException("API BaseUrl is not configured."));
 });
+
+builder.Services.AddScoped<EventApiService>();
 
 var app = builder.Build();
 
