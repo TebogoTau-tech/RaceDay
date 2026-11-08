@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 using RaceDay.Api.Models;
+using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Controllers
 {
@@ -14,6 +15,16 @@ namespace RaceDay.Api.Controllers
         public EventsController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        [HttpPost("upload-banner")]
+        public async Task<IActionResult> UploadBanner(IFormFile file, [FromServices] IBlobStorageService blobService)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            string imageUrl = await blobService.UploadFileAsync(file, "event-banners");
+            return Ok(new { Url = imageUrl });
         }
 
         // DTO for creating an Event
@@ -171,6 +182,8 @@ namespace RaceDay.Api.Controllers
                 .ToListAsync();
 
             return Ok(enrolments);
+
+
 
         }
     }
