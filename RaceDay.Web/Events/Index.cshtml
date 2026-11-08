@@ -1,0 +1,41 @@
+﻿@model IEnumerable<RaceDay.Web.Models.EventViewModel>
+
+@{
+    ViewData["Title"] = "Events List";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Race Events</h2>
+        <a asp-action="Create" class="btn btn-primary">Create New Event</a>
+    </div>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" class="card-img-top" alt="Event Banner" style="height: 200px; object-fit: cover;" />
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Title</h5>
+                            <p class="card-text text-muted">@item.Description</p>
+                            <p class="card-text"><strong>Date:</strong> @item.EventDate.ToString("yyyy-MM-dd HH:mm")</p>
+                            <p class="card-text"><strong>Location:</strong> @item.Location</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info">No events found or unable to reach the API.</div>
+            </div>
+        }
+    </div>
+</div>
