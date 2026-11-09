@@ -1,4 +1,32 @@
 ![CI Status](https://img.shields.io/badge/CI%2FCD-Passing-brightgreen?style=flat-square&logo=github)
+
+
+## Running with Docker
+
+To build and run the RaceDay Web application inside a Docker container, follow these steps:
+
+1. Build the Docker image from the root of the Web project directory:
+   \`\`\`bash
+   docker build -t raceday-web .
+   \`\`\`
+
+2. Run the container using the exact single command below:
+   \`\`\`bash
+   docker run -d -p 8080:8080 --name raceday-container raceday-web
+   \`\`\`
+
+Once running, open your browser and navigate to `http://localhost:8080`.
+
+
+
+
+
+
+
+
+
+
+
 # RaceDay RESTful API (.NET 8.0)
 
 A secure and modular RESTful API built with .NET 8.0 and Entity Framework Core (Code-First) for managing running events, categories, user accounts, and participant enrolments.
