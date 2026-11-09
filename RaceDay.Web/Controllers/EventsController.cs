@@ -13,6 +13,12 @@ namespace RaceDay.Web.Controllers
             _eventApiService = eventApiService;
         }
 
+        public async Task<IActionResult> Dashboard()
+        {
+            var events = await _eventApiService.GetEventsAsync();
+            return View(events);
+        }
+
         // GET: Events
         public async Task<IActionResult> Index()
         {

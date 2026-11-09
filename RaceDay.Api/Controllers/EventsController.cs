@@ -47,28 +47,30 @@ namespace RaceDay.Api.Controllers
         }
 
         // GET: api/events/5
-[HttpGet("{id}")]
-public async Task<IActionResult> GetEvent(int id)
-{
-    var eventItem = await _context.Events
-        .Where(e => e.EventId == id)
-        .Select(e => new
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEvent(int id)
         {
-            Id = e.EventId,
-            e.Title,
-            e.Description,
-            e.EventDate,
-            e.Location
-        })
-        .FirstOrDefaultAsync();
+            var eventItem = await _context.Events
+                .Where(e => e.EventId == id)
+                .Select(e => new
+                {
+                    Id = e.EventId,
+                    e.Title,
+                    e.Description,
+                    e.EventDate,
+                    e.Location,
+                    e.CategoryId,
+                    e.OrganiserId
+                })
+                .FirstOrDefaultAsync();
 
-    if (eventItem == null)
-    {
-        return NotFound();
-    }
+            if (eventItem == null)
+            {
+                return NotFound();
+            }
 
-    return Ok(eventItem);
-}
+            return Ok(eventItem);
+        }
 
         // GET: api/Events
         [HttpGet]
@@ -79,7 +81,7 @@ public async Task<IActionResult> GetEvent(int id)
                 .Include(e => e.Organiser)
                 .Select(e => new
                 {
-                    e.EventId,
+                    Id =e.EventId,
                     e.Title,
                     e.Description,
                     e.EventDate,
@@ -91,7 +93,6 @@ public async Task<IActionResult> GetEvent(int id)
 
             return Ok(events);
         }
-
 
         // GET: api/Events/categories
         [HttpGet("categories")]
@@ -105,7 +106,7 @@ public async Task<IActionResult> GetEvent(int id)
         [HttpPost]
         public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
         {
-            // Verify that the organiser exists and is actually an Organiser
+            // Verify that the organiser exists
             var organiser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == dto.OrganiserId);
             if (organiser == null)
             {
@@ -140,7 +141,7 @@ public async Task<IActionResult> GetEvent(int id)
         public async Task<IActionResult> EnrolParticipant([FromBody] EnrolmentDto dto)
         {
             // Verify participant exists
-            var participant = await _context.Users.OfType<Participant>().FirstOrDefaultAsync(p => p.UserId == dto.ParticipantId);
+            var participant = await _context.Users.FirstOrDefaultAsync(p => p.UserId == dto.ParticipantId);
             if (participant == null)
             {
                 return BadRequest(new { message = "Invalid Participant ID." });
@@ -206,6 +207,21 @@ public async Task<IActionResult> GetEvent(int id)
             return NoContent();
         }
 
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            // TODO: Your existing Azure Blob Storage service call here
+            // e.g., string imageUrl = await _blobStorageService.UploadAsync(file);
+
+            // For now, let's assume it returns the public URL string from Azure:
+            string imageUrl = "https://yourstorageaccount.blob.core.windows.net/banners/" + file.FileName;
+
+            return Ok(new { url = imageUrl });
+        }
+
         // DELETE: api/Events/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
@@ -227,7 +243,7 @@ public async Task<IActionResult> GetEvent(int id)
         public async Task<IActionResult> GetParticipantEnrolments(int participantId)
         {
             // Check if participant exists
-            var participantExists = await _context.Users.OfType<Participant>()
+            var participantExists = await _context.Users
                 .AnyAsync(p => p.UserId == participantId);
 
             if (!participantExists)
@@ -251,10 +267,7 @@ public async Task<IActionResult> GetEvent(int id)
                 .ToListAsync();
 
             return Ok(enrolments);
-
-
-
         }
     }
 }
-    
+

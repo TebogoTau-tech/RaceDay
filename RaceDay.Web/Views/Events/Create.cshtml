@@ -39,6 +39,11 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label">Event Banner Image</label>
+                    <input type="file" name="bannerFile" class="form-control" />
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="ImageUrl" class="form-label">Banner Image URL</label>
                     <input asp-for="ImageUrl" class="form-control" />
                     <span asp-validation-for="ImageUrl" class="text-danger"></span>

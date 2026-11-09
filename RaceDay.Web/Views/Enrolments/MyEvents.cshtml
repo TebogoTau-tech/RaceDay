@@ -1,0 +1,45 @@
+﻿@model IEnumerable<dynamic> 
+
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+
+<div class="container mt-4">
+    <h2>My Enrolments</h2>
+    <p class="text-muted">Track all the races and events you have signed up for.</p>
+    <hr />
+
+    <div class="row">
+        <!-- Example Enrolment Card with Status Color Coding -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-start border-4 border-success">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Soweto Marathon 2026</h5>
+                    <p class="card-text mb-1"><strong>Date:</strong> 2026-11-09</p>
+                    <p class="card-text mb-1"><strong>Category:</strong> 10km Run</p>
+                    <p class="card-text mb-3">
+                        <strong>Status:</strong> 
+                        <span class="badge bg-success">Confirmed</span>
+                    </p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Pending Card -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-start border-4 border-warning">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Cape Town Cycle Tour</h5>
+                    <p class="card-text mb-1"><strong>Date:</strong> 2026-12-15</p>
+                    <p class="card-text mb-1"><strong>Category:</strong> 100km Cycling</p>
+                    <p class="card-text mb-3">
+                        <strong>Status:</strong> 
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    </p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
