@@ -1,5 +1,9 @@
 ![CI Status](https://img.shields.io/badge/CI%2FCD-Passing-brightgreen?style=flat-square&logo=github)
 
+# RaceDay Application (Part 3 Submission)
+
+An enterprise-grade ASP.NET Core MVC web application consuming a Web API backend, built to manage racing events, role-based dashboards, secure cloud file storage, and participant enrolment tracking.
+
 
 ## Running with Docker
 
@@ -15,20 +19,6 @@ To build and run the RaceDay Web application inside a Docker container, follow t
 
 Once running, open your browser and navigate to `http://localhost:8080`.
 
-
-
-
-
-
-
-
-
-
-
-# RaceDay RESTful API (.NET 8.0)
-
-A secure and modular RESTful API built with .NET 8.0 and Entity Framework Core (Code-First) for managing running events, categories, user accounts, and participant enrolments.
-
 ---
 
 
@@ -38,68 +28,28 @@ Module Code: PROG6212
 * **Video Link:** https://youtu.be/FP9MSLGpp1c
 
 ---
+---
 
-## Tech Stack & Architecture
-Framework: .NET 8.0 (C#)
-Database & ORM: SQL Server via Entity Framework Core (EF Core) Code-First
-Design Pattern: Table-per-Hierarchy (TPH) inheritance model for the `User` base class, differentiating `Organiser` and `Participant` entities in a single table.
-Testing: xUnit, Moq, and EF Core In-Memory Database for unit testing.
-Security: Password hashing using BCrypt.
+##  Key Features & Implementation Highlights (Part 3)
+
+* **Role-Based UI & Navigation:** Dynamic dashboards tailored for different user roles. Organisers have full CRUD control over events, while participants can track their personal status via "My Enrolments" views featuring color-coded status badges.
+* **Secure Azure Blob Storage Integration:** The MVC frontend never touches Azure directly. Image uploads (banners/flyers) are securely packaged using `MultipartFormDataContent`, routed to the Web API, uploaded to Azure Blob Storage, and persisted as secure public URLs.
+* **Containerisation (Docker):** Fully configured multi-stage `Dockerfile` supporting lightweight, portable container deployment.
+* **Comprehensive Unit Testing:** Robust xUnit test suite covering core service logic, view model validation, and response handling (9/9 tests passing).
 
 ---
 
-Step-by-Step Testing Guide 
+##  Lecturer / Evaluator Guide: How to Run the Code
 
-Follow these steps to run and test the application locally:
+### Option 1: Running Locally (Visual Studio / .NET CLI)
+1. Clone or open the solution folder in Visual Studio or your terminal.
+2. Ensure both the **RaceDay.Api** and **RaceDay.Web** projects are set to launch (or run them concurrently via terminal):
+   * Run the API project: `dotnet run --project RaceDay.Api`
+   * Run the Web project: `dotnet run --project RaceDay.Web`
+3. Open your browser and navigate to the local URL provided by the Web project (typically `http://localhost:5000` or `https://localhost:5001`).
 
-1. Prerequisites
-Ensure you have the following installed on your machine:
-* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-* Visual Studio 2022 (or Visual Studio Code) with SQL Server / LocalDB.
-
-
-2. Clone and Open the Project
-   1. Clone the repository to your local machine:
+### Option 2: Running with Docker
+To build and run the web application inside a Docker container:
+1. Build the Docker image from the root of the Web project directory:
    ```bash
-   git clone: https://github.com/TebogoTau-tech/RaceDay.git
-
-   Open the solution file (RaceDay.sln) in Visual Studio.
-
-
- 3. Setup the Database
-Open the Package Manager Console in Visual Studio (Tools > NuGet Package Manager > Package Manager Console).
-
-Run the following command to apply migrations and generate the SQL Server database:
-
-dotnet ef database update --project RaceDay.Api
-
-
-4. Running the Application (Swagger UI)
-In Visual Studio, set RaceDay.Api as the Startup Project (Right-click project -> Set as Startup Project).
-
-Press F5 (or click the green Start button).
-
-Your default web browser will automatically open to the Swagger UI page (https://localhost:xxxx/swagger), where you can interactively test all API endpoints.
-
-
-5. Running the Unit Tests
-To verify the test suite:
-
-Open Test Explorer in Visual Studio (Test > Test Explorer).
-
-Click Run All to execute all unit tests verifying controller logic, registrations, and enrolments.
-(Alternatively, run dotnet test from your terminal).
-
-
-Core API Endpoints Reference
-
-
-POST/api/Auth/register-participant -- Registers a new participant account with a securely hashed password.
-
-POST/api/Auth/login -- Authenticates users and returns role metadata (Organiser vs. Participant).
-
-GET/api/Events/categories -- Retrieves all available race categories.
-
-POST/api/Events/enrol -- Enrols a participant into a specific event category (includes duplicate checks).
-
-GET/api/Events/participant/{id}/enrolments -- Retrieves a participant's registered event history.
+   docker build -t raceday-web .
