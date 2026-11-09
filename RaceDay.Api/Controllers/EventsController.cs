@@ -106,7 +106,7 @@ public async Task<IActionResult> GetEvent(int id)
         public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
         {
             // Verify that the organiser exists and is actually an Organiser
-            var organiser = await _context.Users.OfType<Organiser>().FirstOrDefaultAsync(o => o.UserId == dto.OrganiserId);
+            var organiser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == dto.OrganiserId);
             if (organiser == null)
             {
                 return BadRequest(new { message = "Invalid Organiser ID. Only organisers can create events." });
