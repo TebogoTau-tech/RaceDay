@@ -1,0 +1,26 @@
+﻿@model RaceDay.Web.Models.EventViewModel
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-primary mb-3">@Model.Title</h2>
+                    <h6 class="card-subtitle mb-3 text-muted"><strong>Location:</strong> @Model.Location</h6>
+                    <p class="card-text"><strong>Date & Time:</strong> @Model.EventDate.ToString("yyyy-MM-dd HH:mm")</p>
+                    <hr />
+                    <p class="card-text"><strong>Description:</strong></p>
+                    <p class="card-text bg-light p-3 rounded">@Model.Description</p>
+
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
