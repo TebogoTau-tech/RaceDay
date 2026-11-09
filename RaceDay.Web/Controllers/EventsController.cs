@@ -47,6 +47,7 @@ namespace RaceDay.Web.Controllers
                 var success = await _eventApiService.CreateEventAsync(model);
                 if (success)
                 {
+                     TempData["SuccessMessage"] = "Event created successfully!";
                     return RedirectToAction(nameof(Index));
                 }
                 ModelState.AddModelError(string.Empty, "Unable to create event. Please try again.");
@@ -81,6 +82,7 @@ namespace RaceDay.Web.Controllers
                 var success = await _eventApiService.UpdateEventAsync(id, model);
                 if (success)
                 {
+                        TempData["SuccessMessage"] = "Event updated successfully!";                                                                                                                                                                                 
                     return RedirectToAction(nameof(Index));
                 }
                 ModelState.AddModelError(string.Empty, "Unable to update the event. Please try again.");
@@ -108,6 +110,7 @@ namespace RaceDay.Web.Controllers
             var success = await _eventApiService.DeleteEventAsync(id);
             if (success)
             {
+                TempData["SuccessMessage"] = "Event deleted successfully!";
                 return RedirectToAction(nameof(Index));
             }
 

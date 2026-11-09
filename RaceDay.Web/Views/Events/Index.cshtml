@@ -5,10 +5,20 @@
 }
 
 <div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Race Events</h2>
         <a asp-action="Create" class="btn btn-primary">Create New Event</a>
     </div>
+    <table class="table table-striped">
+        <!-- Table headers and rows -->
+    </table>
 
     <div class="row">
         @if (Model != null && Model.Any())
@@ -21,6 +31,9 @@
                         {
                             <img src="@item.ImageUrl" class="card-img-top" alt="Event Banner" style="height: 200px; object-fit: cover;" />
                         }
+                        
+
+
                         <div class="card-body">
                             <h5 class="card-title">@item.Title</h5>
                             <p class="card-text text-muted">@item.Description</p>
