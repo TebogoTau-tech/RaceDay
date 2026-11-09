@@ -6,14 +6,12 @@
 To build and run the RaceDay Web application inside a Docker container, follow these steps:
 
 1. Build the Docker image from the root of the Web project directory:
-   \`\`\`bash
+   
    docker build -t raceday-web .
-   \`\`\`
 
 2. Run the container using the exact single command below:
-   \`\`\`bash
+  
    docker run -d -p 8080:8080 --name raceday-container raceday-web
-   \`\`\`
 
 Once running, open your browser and navigate to `http://localhost:8080`.
 
